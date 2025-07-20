@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-const UrlShortener = () => {
+const URLShortener = ({ onUrlShortened }) => {
   const [longUrl, setLongUrl] = useState('');
   const [shortUrl, setShortUrl] = useState('');
   const [error, setError] = useState('');
@@ -14,7 +14,7 @@ const UrlShortener = () => {
     e.preventDefault();
     console.log('Submitting:', longUrl);
     try {
-      const token = localStorage.getItem('token');
+      const token = sessionStorage.getItem('token');
       const response = await axios.post(`${apiBaseUrl}/shorten`, { longUrl }, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -22,6 +22,9 @@ const UrlShortener = () => {
       setShortUrl(response.data.shortUrl);
       setError('');
       setIsCopied(false); // Reset copy state on new submission
+      if (onUrlShortened) {
+        onUrlShortened();
+      }
     } catch (err) {
       console.error('Error:', err);
       setError(err.response?.data.error || 'Something went wrong');
@@ -87,4 +90,4 @@ const UrlShortener = () => {
   );
 };
 
-export default UrlShortener;
+export default URLShortener;

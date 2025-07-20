@@ -1,22 +1,30 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-function Navbar() {
+function Navbar({ isLoggedIn, handleLogout }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const onLogout = () => {
+    handleLogout();
+    navigate('/login');
+  };
 
   const navItems = [
     { name: "About Us", path: "/about" },
     { name: "News", path: "/news" },
     { name: "Docs", path: "/docs" },
-    { name: "Login", path: "/login" }
+    isLoggedIn ? { name: "Dashboard", path: "/dashboard" } : { name: "Login", path: "/login" }
   ];
 
   return (
     <div className="sticky top-0 bg-black backdrop-blur-md rounded-md z-30 border-b border-gray-800 border-opacity-50">
       <div className="flex items-center justify-between p-2">
         <div className="flex items-center space-x-4">
-          <img src="/logo.svg" alt="Logo" className="h-12 w-auto" />
-          <h1 className="text-xl font-bold text-gray-400">URL SHORTENER</h1>
+          <Link to="/" className="flex items-center space-x-4">
+            <img src="/logo.svg" alt="Logo" className="h-12 w-auto" />
+            <h1 className="text-xl font-bold text-gray-400">URL SHORTENER</h1>
+          </Link>
         </div>
 
         {/* Desktop Nav */}
@@ -30,6 +38,14 @@ function Navbar() {
               {item.name}
             </Link>
           ))}
+          {isLoggedIn && (
+            <button
+              onClick={onLogout}
+              className="text-base font-medium text-gray-400 hover:text-gray-300 transition"
+            >
+              Logout
+            </button>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -70,6 +86,14 @@ function Navbar() {
                 {item.name}
               </Link>
             ))}
+            {isLoggedIn && (
+              <button
+                onClick={() => { onLogout(); setMenuOpen(false); }}
+                className="text-3xl font-semibold text-gray-400 hover:text-gray-300 transition"
+              >
+                Logout
+              </button>
+            )}
           </div>
         </div>
       )}

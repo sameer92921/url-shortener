@@ -2,9 +2,10 @@
 const mongoose = require('mongoose');
 
 const urlSchema = new mongoose.Schema({
-    _id: {
-        type: String, // The short code will be the _id
+    shortCode: {
+        type: String,
         required: true,
+        unique: true,
     },
     longUrl: {
         type: String,

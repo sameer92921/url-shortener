@@ -10,7 +10,7 @@ exports.postUrl = async (req, res) => {
     try {
         const shortCode = nanoid(10);
         const url = new Url({
-            _id: shortCode,
+            shortCode,
             longUrl,
             userId,
         });
@@ -27,13 +27,23 @@ exports.postUrl = async (req, res) => {
 exports.getUrl = async (req, res) => {
     const { shortCode } = req.params;
     try {
-        const url = await Url.findById(shortCode);
+        const url = await Url.findOne({ shortCode });
         if (url) {
             url.clicks++;
             await url.save();
             return res.redirect(301, url.longUrl);
         }
         res.status(404).json({ error: 'URL not found' });
+    } catch (err) {
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+exports.getUrls = async (req, res) => {
+    const userId = req.userId;
+    try {
+        const urls = await Url.find({ userId });
+        res.json(urls);
     } catch (err) {
         res.status(500).json({ error: 'Server error' });
     }

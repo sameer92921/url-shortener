@@ -5,6 +5,7 @@ const UserAuth = require('../auth/auth');
 const verifyToken = require('../auth/verifyToken');
 
 router.post('/shorten', verifyToken, Urlcontroller.postUrl);
+router.get('/urls', verifyToken, Urlcontroller.getUrls);
 router.get('/:shortCode', Urlcontroller.getUrl);
 router.post('/login', UserAuth.login);
 router.post('/register', UserAuth.register);

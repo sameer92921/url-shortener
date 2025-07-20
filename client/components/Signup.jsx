@@ -5,6 +5,7 @@ const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
@@ -23,15 +24,17 @@ const Signup = () => {
       if (!res.ok) throw new Error(data.message || 'Signup failed');
       
       setMessage('Signup successful! Redirecting...');
+      setIsSuccess(true);
       setTimeout(() => navigate('/login'), 1500);
     } catch (err) {
       setMessage(err.message);
+      setIsSuccess(false);
     }
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-black">
-      <div className="bg-gray-900 bg-opacity-60 p-8 rounded-lg shadow-md w-1/5 max-w-md">
+      <div className="bg-gray-900 bg-opacity-60 p-8 rounded-lg shadow-md w-full max-w-md">
         <h2 className="text-2xl font-semibold text-gray-300 mb-6 text-center">Create an account</h2>
         <form onSubmit={handleSignup} className="flex flex-col gap-4">
           <input
@@ -54,7 +57,7 @@ const Signup = () => {
           >
             Sign Up
           </button>
-          {message && <p className="text-sm text-center text-red-400">{message}</p>}
+          {message && <p className={`text-sm text-center ${isSuccess ? 'text-green-500' : 'text-red-500'}`}>{message}</p>}
         </form>
         <p className="mt-4 text-center text-sm text-gray-400">
           Already have an account?{' '}
